@@ -1,0 +1,55 @@
+<mapper namespace="">
+    <resultMap id="BaseResultMap" type="com.cmcc.rtls.model.Menu">
+        <id column="id" property="id" jdbcType="INT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="pid" property="pid" jdbcType="INT"/>
+        <result column="url" property="url" javaType="VARCHAR"/>
+        <result column="method" property="method" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, title, pid, url, method,icon,type,remark
+    </sql>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+    </select>
+
+    <select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.neo.entity.UserEntity">
+        INSERT INTO
+        users
+        (userName,passWord,user_sex)
+        VALUES
+        (#{userName}, #{passWord}, #{userSex})
+    </insert>
+
+    <update id="update" parameterType="com.neo.entity.UserEntity">
+        UPDATE
+        users
+        SET
+        <if test="userName != null">userName = #{userName},</if>
+        <if test="passWord != null">passWord = #{passWord},</if>
+        nick_name = #{nickName}
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM
+        users
+        WHERE
+        id =#{id}
+    </delete>
+</mapper>

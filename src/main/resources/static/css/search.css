@@ -1,0 +1,36 @@
+.parent {
+    position: relative;
+}
+.search {
+    width: 280px;
+    height: 30px;
+    border-radius: 18px;
+    outline: none;
+    font-size: 9px;
+    background-color: #E8F0FE;
+    border: 1px solid rgba(255,165,0,0.7);
+    padding-left: 20px;
+    position: absolute;
+}
+.search input{
+    width: 260px;
+    height: 30px;
+    outline: none;
+    background: rgba(255,255,255,0);
+    border: none;
+    font-size: 13px;
+}
+.btn {
+    border: 2px solid rgba(255,165,0,0.7);
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    position: absolute;
+    background: #FFB800;
+    color: white;
+    top: -4px;
+    left: 282px;
+    border: 1px black;
+    outline: none;
+    cursor: pointer;
+}

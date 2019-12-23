@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="application/msword"/>
+    <title>toWord</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+</head>
+<body style="background-color:rgba(230,230,250,0.5)">
+<div style="width: 1000px;margin: 18px auto;" id="expose_pdf">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <h1 class="layui-inline" th:if="${info!='null'}">[[${info.title}]]</h1>
+                <h1 class="layui-inline" th:if="${info=='null'}">错误！</h1>
+                <span class="layui-badge layui-bg-cyan" th:if="${info!='null'}">[[${info.version}]]</span>
+                <span class="layui-badge" th:if="${basePath!='null'}">Baseurl:[[${basePath}]]</span>
+                <a id="save" type="button"
+                   class="layui-btn layui-btn-xs layui-btn-warm">保存文件 <i class="layui-icon">&#xe601;</i>
+                </a>
+            </div>
+            <div class="layui-col-md5 layui-col-md-offset1">
+                <div class="container">
+                    <form action="" class="parent layui-form">
+                        <div class="search">
+                            <input type="text" placeholder="swagger.json文件http路径" value="" id="url">
+                        </div>
+                        <button type="button" lay-submit lay-filter="search" class="btn">GO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-orange">
+    <div th:if="${tableMap!='null'}">
+        <div th:each="tableMap:${tableMap}" style="padding-top: 10px">
+            <fieldset class="layui-elem-field layui-field-title" style="margin: 0px">
+                <legend th:if="${tableMap.key!=null}"
+                        style="border-radius: 8px;background: rgba(34,139,34,0.7);color: white">
+                    <!--这个是类的说明-->
+                    <h2 th:text="${tableMap.key}"></h2>
+                </legend>
+                <div class="layui-field-box" th:each="table,tableStat:${tableMap.value}">
+                    <table class="layui-table" lay-even style="box-shadow: 10px 10px 5px #888888;">
+                        <!--这个是每个请求的说明，方便生成文档后进行整理-->
+                        <tr class="layui-bg-cyan">
+                            <td colspan="5">
+                                <h4 class="layui-inline"
+                                    th:text="${tableStat.count}+'. '+${table.description}+${'('+table.tag+')'}"></h4>
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td>基本信息</td>
+                            <td colspan="2">描述</td>
+                            <td colspan="2">说明</td>
+                        </tr>
+                        <tr align="center">
+                            <td>接口描述</td>
+                            <td colspan="2" th:text="${table.description}"></td>
+                            <td colspan="2" th:text="${table.tag}"></td>
+                        </tr>
+                        <tr align="center">
+                            <td>URL</td>
+                            <td colspan="2" th:text="${table.url}"></td>
+                            <td colspan="2">请求路径地址</td>
+                        </tr>
+                        <tr align="center">
+                            <td>请求方式</td>
+                            <td colspan="2" th:text="${table.requestType}"></td>
+                            <td colspan="2">[[${table.requestType}]]请求</td>
+                        </tr>
+                        <tr align="center">
+                            <td>请求类型</td>
+                            <td colspan="2" th:text="${table.requestForm}"></td>
+                            <td colspan="2">/</td>
+                        </tr>
+                        <tr align="center">
+                            <td>返回类型</td>
+                            <td colspan="2" th:text="${table.responseForm}"></td>
+                            <td colspan="2">/</td>
+                        </tr>
+
+                        <tr align="center">
+                            <td>状态码</td>
+                            <td colspan="2">描述</td>
+                            <td colspan="2">说明</td>
+                        </tr>
+
+                        <tr align="center" th:each="response:${table.responseList}">
+                            <td th:text="${response.name}"></td>
+                            <td colspan="2" th:text="${response.description}"></td>
+                            <td colspan="2" th:text="${response.remark}"></td>
+                        </tr>
+
+                        <tr align="center">
+                            <td>参数名</td>
+                            <td>数据类型</td>
+                            <td>参数类型</td>
+                            <td>是否必填</td>
+                            <td>说明</td>
+                        </tr>
+
+                        <tr align="center" th:each="request:${table.requestList}">
+                            <td th:text="${request.name}"></td>
+                            <td th:text="${request.type}"></td>
+                            <td th:text="${request.paramType}"></td>
+                            <td th:if="${request.require}" th:text="Y"></td>
+                            <td th:if="${!request.require}" th:text="N"></td>
+                            <td th:text="${request.remark}"></td>
+                        </tr>
+                        <tr align="center" class="specialHeight">
+                            <td>请求参数</td>
+                            <td colspan="4">
+                                <pre style="text-align: left" class="layui-code" lay-skin="notepad">[[${table.requestParam}]]</pre>
+                            </td>
+                        </tr>
+                        <tr align="center" class="specialHeight">
+                            <td>返回值</td>
+                            <td colspan="4">
+                                <pre style="text-align: left" class="layui-code" lay-skin="notepad">[[${table.responseParam}]]</pre>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div th:if="${tableMap=='null'}">
+        <blockquote class="layui-elem-quote">无效的swagger.json文件或找不到此文件！</blockquote>
+    </div>
+    <div>
+        <blockquote class="layui-elem-quote">小技巧：可以看到网页上生成的类似 word 文档的页面，右键另存为 xxx.doc 文件即可.</blockquote>
+    </div>
+</div>
+</body>
+<script src="layui/layui.js" type="application/javascript"></script>
+<script src="js/common.js" type="application/javascript"></script>
+</html>

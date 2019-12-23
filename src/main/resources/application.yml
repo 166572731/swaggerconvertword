@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  tomcat:
+    max-threads: 800
+    uri-encoding: UTF-8
+
+swagger.url: http://localhost:8080/swagger.json
+
+spring:
+  application:
+    name: swaggerConvertWord
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    servlet:
+      content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    mode: HTML5
+
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rtls
+    username: root
+    password: 123456
+
+mybatis:
+  type-aliases-package:

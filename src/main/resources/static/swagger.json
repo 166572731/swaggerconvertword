@@ -1,0 +1,3364 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "beego Test API",
+        "description": "beego has a very cool tools to autogenerate documents for your API",
+        "version": "1.0.0",
+        "termsOfService": "http://beego.me/",
+        "contact": {
+            "email": "astaxie@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/anchors/": {
+            "get": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "Get List",
+                "description": "查询基站列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "Update AnchorInfo",
+                "description": "修改基站信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改基站信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.AnchorInfo"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "Add AnchorInfo",
+                "description": "添加基站信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "添加基站信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.AnchorInfo"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "Delete  AnchorInfo",
+                "description": "批量删除基站",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "批量删除基站信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/anchor.AnchorIds"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/anchors/anchorissue": {
+            "post": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "AnchorInfo  Issue",
+                "description": "基站信息下发",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "根据MapId批量下发基站信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/anchor.MapIds"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/anchors/{id}": {
+            "get": {
+                "tags": [
+                    "anchors"
+                ],
+                "summary": "Get One",
+                "description": "查询基站详细信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "基站Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "404": {
+                        "description": "\":id anchor not found\""
+                    }
+                }
+            }
+        },
+        "/map/": {
+            "get": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Query for map list information",
+                "description": "查询地图列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Update map information",
+                "description": "修改地图信息",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "body",
+                        "description": "修改地图信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.MapInfo"
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "地图图片",
+                        "type": "file"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Insert map information",
+                "description": "新增地图信息",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "body",
+                        "description": "新增地图信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.MapInfo"
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "地图图片",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/map/image/{map_id}": {
+            "get": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Get map picture information",
+                "description": "获取地图图片信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "map_id",
+                        "description": "地图的ID编号",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/map/status/{status_id}": {
+            "get": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Get the map information by status id",
+                "description": "通过状态ID获取地图信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "status_id",
+                        "description": "地图的状态码0（待更新）或1（正常）",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/map/synchronization/{map_id}": {
+            "put": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Synchronous map",
+                "description": "同步地图",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "map_id",
+                        "description": "地图的ID编号",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/map/{map_id}": {
+            "get": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Get the map information by ID",
+                "description": "通过ID获取地图信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "map_id",
+                        "description": "地图的ID编号",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "map"
+                ],
+                "summary": "Delete map information",
+                "description": "删除地图信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "map_id",
+                        "description": "删除地图的ID编号",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/": {
+            "get": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Get all system permission information",
+                "description": "获取所有系统权限信息",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Add permission information",
+                "description": "添加权限信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "输入需要添加的权限资源信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.PermissionMenu"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/anchor/user/{uid}": {
+            "get": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Gets all user anchor permissions",
+                "description": "获取用户所有基站权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/anchor/{anchor_id}/user/{uid}": {
+            "put": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Add user anchor Permissions",
+                "description": "分配用户基站权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "anchor_id",
+                        "description": "输入基站id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "operation",
+                        "description": "输入操作权限（add,find,update,delete）",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/tag/user/{uid}": {
+            "get": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Gets all user tag permissions",
+                "description": "获取用户所有标签权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/tag/{tag_ids}/roles/{role_id}": {
+            "put": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Add Permissions",
+                "description": "分配角色标签权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "tag_id",
+                        "description": "输入标签id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "operation",
+                        "description": "输入操作权限（add,find,update,delete）",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/user/{uid}": {
+            "get": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Get all system permission information for user",
+                "description": "获取用户所有系统权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/permissions/{permissions_ids}/roles/{role_id}": {
+            "put": {
+                "tags": [
+                    "permissions"
+                ],
+                "summary": "Assign role permissions",
+                "description": "分配角色权限信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "role_id",
+                        "description": "输入角色id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "permissions_ids",
+                        "description": "输入权限id,多个权限用‘，’号隔开",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/roles/": {
+            "get": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Gets all roles",
+                "description": "获取所有角色信息",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Adding roles",
+                "description": "添加角色信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "输入需要添加的角色信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.Role"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/roles/role/{role_id}/users": {
+            "get": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Gets all role users",
+                "description": "获取角色所有用户信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "role_id",
+                        "description": "输入角色id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/roles/user/{uid}/role/{role_id}": {
+            "get": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Check role for user",
+                "description": "检查用户是否属于某角色",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "role_id",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/roles/user/{uid}/roles": {
+            "get": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Gets all user roles",
+                "description": "获取用户所有角色信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/roles/{role_id}/users/{uid}": {
+            "put": {
+                "tags": [
+                    "roles"
+                ],
+                "summary": "Assign user roles",
+                "description": "分配用户角色信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "输入用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "path",
+                        "name": "role_id",
+                        "description": "输入角色id,多个角色用‘,’号隔开",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get List",
+                "description": "查询标签列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully {object} resp.Result"
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Update Info",
+                "description": "修改标签信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改标签信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagInfo"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Add TagInfo",
+                "description": "添加标签信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "添加标签信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagInfo"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Delete  tagInfo",
+                "description": "批量删除标签",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "批量删除标签信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/tag.TagIds"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/group": {
+            "put": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Update Info",
+                "description": "修改标签分组信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改标签分组信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagsGroup"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/group/{group_id}": {
+            "delete": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Delete  tagsGroup  By  Id",
+                "description": "删除标签分组",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "标签分类Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/group/{id}": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get TagsGroup By Id",
+                "description": "查询标签分组详细信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "标签分组Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "404": {
+                        "description": "\":id tagGroup not found.\""
+                    }
+                }
+            }
+        },
+        "/tags/groups": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get TagsGroup List",
+                "description": "查询标签分组列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully {object} resp.Result"
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Add TagsGroupInfo",
+                "description": "添加标签分组信息",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "添加标签分组信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagsGroup"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/type": {
+            "put": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Update Info",
+                "description": "修改标签分类信息",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "body",
+                        "description": "添加标签分类信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagsType"
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "地图图片",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Add TagTypeInfo",
+                "description": "添加标签分类信息",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "body",
+                        "description": "添加标签分类信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.TagsType"
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "地图图片",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/type/{id}": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get TagType By Id",
+                "description": "查询标签分类详细信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "标签分类Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "404": {
+                        "description": "\":id tagType not found.\""
+                    }
+                }
+            }
+        },
+        "/tags/type/{type_id}": {
+            "delete": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Delete  tagType  By  Id",
+                "description": "删除标签分类",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "标签分类Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Results"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/types": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get TagType List",
+                "description": "查询标签分类列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully {object} resp.Result"
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/ws": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "WebSocket上报标签实时位置信息",
+                "description": "WebSocket上报标签实时位置信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully {object} resp.Result"
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/{id}": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get One",
+                "description": "查询标签详细信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "标签Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "404": {
+                        "description": "\":id tag not found.\""
+                    }
+                }
+            }
+        },
+        "/tags/{tag_addr}/path": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get Path",
+                "description": "查询标签历史轨迹",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tag_addr",
+                        "description": "标签地址,e.g: deca01004ad3c7bb",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "start_time",
+                        "description": "开始时间,e.g: 2019-11-05 10:22:00",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/time.Time"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "end_time",
+                        "description": "结束时间,e.g: 2019-11-05 10:22:00",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/time.Time"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get GetUserList",
+                "description": "查询用户列表信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "JWT",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Post Insert",
+                "description": "添加用户",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "添加用户",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.InsertUser"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "409": {
+                        "description": "user already exists."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Post UserLogin",
+                "description": "登录用户",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "登录用户",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.LoginUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/logout": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get LogOut",
+                "description": "退出用户",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/{account}/token": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get GetUserByName",
+                "description": "查询当前用户信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "account",
+                        "description": "根据账号查询当前用户信息",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": ":username is empty"
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/{uid}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get GetUserById",
+                "description": "查询用户信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "根据账号查询当前用户信息",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": ":username is empty"
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Put UpdateUserInfo",
+                "description": "修改用户信息",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改用户信息",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/db.User"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete DeleteUserById",
+                "description": "删除用户",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "删除用户",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/{uid}/ResetPassword": {
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Put ResetPassword",
+                "description": "重置密码",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/{uid}/UpdateActivated": {
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Put UpdateActivated",
+                "description": "UpdateActivated",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改激活状态",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.Activate"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/{uid}/password": {
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Put UpdateUserPassword",
+                "description": "修改用户密码",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uid",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "修改用户密码",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.PasswordReq"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/resp.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "11786.0xc0008a9a10.false": {
+            "title": "false",
+            "type": "object"
+        },
+        "11914.0xc0008a9aa0.false": {
+            "title": "false",
+            "type": "object"
+        },
+        "12082.0xc0008a9b90.false": {
+            "title": "false",
+            "type": "object"
+        },
+        "anchor.AnchorIds": {
+            "title": "AnchorIds",
+            "type": "object",
+            "properties": {
+                "Ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        },
+        "anchor.MapIds": {
+            "title": "MapIds",
+            "type": "object",
+            "properties": {
+                "Ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        },
+        "db.AnchorInfo": {
+            "title": "AnchorInfo",
+            "type": "object",
+            "properties": {
+                "anchor_addr": {
+                    "type": "string"
+                },
+                "anchor_alias": {
+                    "type": "string"
+                },
+                "anchor_color": {
+                    "type": "string"
+                },
+                "ant_delay_rx": {
+                    "type": "string"
+                },
+                "ant_delay_tx": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_user": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "last_update_person": {
+                    "type": "string"
+                },
+                "map_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "master": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "master_addr": {
+                    "type": "string"
+                },
+                "master_anchors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/db.Masteranchor"
+                    }
+                },
+                "master_lag_delay": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "product_model": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "xn": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "yn": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "zn": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
+        "db.MapInfo": {
+            "title": "MapInfo",
+            "type": "object",
+            "properties": {
+                "cle_ip": {
+                    "type": "string"
+                },
+                "control_port": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_person": {
+                    "type": "string"
+                },
+                "data_port": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "file_path": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "incline": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "last_update_person": {
+                    "type": "string"
+                },
+                "map_name": {
+                    "type": "string"
+                },
+                "pixel_length": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "pixel_width": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "real_length": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "real_width": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "rf_parameter": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/db.Rf"
+                    }
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                }
+            }
+        },
+        "db.Masteranchor": {
+            "title": "Masteranchor",
+            "type": "object",
+            "properties": {
+                "Addr": {
+                    "type": "string"
+                },
+                "Rfdistance": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.PermissionMenu": {
+            "title": "PermissionMenu",
+            "type": "object",
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "pid": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.Rf": {
+            "title": "Rf",
+            "type": "object",
+            "properties": {
+                "chan": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "code": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "nsfd": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "pac": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "plen": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "prf": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "rate": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "db.Role": {
+            "title": "Role",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "role_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.TagInfo": {
+            "title": "TagInfo",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_person": {
+                    "type": "string"
+                },
+                "gid": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_update_person": {
+                    "type": "string"
+                },
+                "map_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "tag_addr": {
+                    "type": "string"
+                },
+                "tag_alias": {
+                    "type": "string"
+                },
+                "tag_number": {
+                    "type": "string"
+                },
+                "tid": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "x": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "y": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "z": {
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
+        "db.TagsGroup": {
+            "title": "TagsGroup",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_user": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "tag_group_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "updated_user": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.TagsType": {
+            "title": "TagsType",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_user": {
+                    "type": "string"
+                },
+                "file_path": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "tag_type_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "updated_user": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.User": {
+            "title": "User",
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "created_user": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "head_portrait": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "is_activate": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "secretkey": {
+                    "type": "string"
+                },
+                "tele_phone": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "updated_user": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "resp.List": {
+            "title": "List",
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/12082.0xc0008a9b90.false"
+                    }
+                },
+                "meta": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "resp.Meta": {
+            "title": "Meta",
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "detail": {
+                    "type": "string"
+                },
+                "message": {
+                    "$ref": "#/definitions/11786.0xc0008a9a10.false"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "resp.Result": {
+            "title": "Result",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/11914.0xc0008a9aa0.false"
+                },
+                "meta": {
+                    "$ref": "#/definitions/resp.Meta"
+                }
+            }
+        },
+        "resp.Results": {
+            "title": "Results",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/resp.List"
+                },
+                "meta": {
+                    "$ref": "#/definitions/resp.Meta"
+                }
+            }
+        },
+        "tag.TagIds": {
+            "title": "TagIds",
+            "type": "object",
+            "properties": {
+                "Ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            }
+        },
+        "time.Time": {
+            "title": "Time",
+            "type": "object"
+        },
+        "user.Activate": {
+            "title": "Activate",
+            "type": "object",
+            "properties": {
+                "activate": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "user.InsertUser": {
+            "title": "InsertUser",
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "head_portrait": {
+                    "type": "string"
+                },
+                "is_activate": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "string"
+                },
+                "tele_phone": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.LoginUser": {
+            "title": "LoginUser",
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.PasswordReq": {
+            "title": "PasswordReq",
+            "type": "object",
+            "properties": {
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "tags",
+            "description": "标签管理接口\n"
+        },
+        {
+            "name": "anchors",
+            "description": "基站管理接口\n"
+        },
+        {
+            "name": "roles",
+            "description": "角色管理接口(待接入)\n"
+        },
+        {
+            "name": "permissions",
+            "description": "权限管理接口(待接入)\n"
+        },
+        {
+            "name": "map",
+            "description": "地图管理接口(待接入)\n"
+        }
+    ]
+}
