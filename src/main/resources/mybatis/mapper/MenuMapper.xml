@@ -23,7 +23,7 @@
                                      `method`, icon, `type`,
                                      remark)
         values (#{title,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
-                #{method,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+                 upper(#{method,jdbcType=VARCHAR}), #{icon,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
                 #{remark,jdbcType=VARCHAR})
     </insert>
   <delete id="synchronization">

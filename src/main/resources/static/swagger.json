@@ -1427,7 +1427,7 @@
                 "tags": [
                     "tags"
                 ],
-                "summary": "Update Info",
+                "summary": "Update Tag Info",
                 "description": "修改标签信息",
                 "parameters": [
                     {
@@ -1600,8 +1600,8 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
-                        "description": "标签分类Id",
+                        "name": "group_id",
+                        "description": "标签分组Id",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -1768,6 +1768,75 @@
                         "schema": {
                             "$ref": "#/definitions/resp.Results"
                         }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden as quota exceeded."
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/tags/location": {
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "Get Tag Location List",
+                "description": "查询标签列表实时位置信息",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "排序语法，对应sql中的order by。例:col1:asc;col2:desc;col3:desc ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "description": "条件查询语法，对应sql中的where……and。 例:col1:v1;col2:v2 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "description": "对表部分字段进行模糊查询。 例:search:sasasa",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "in",
+                        "description": "In查询语句,对应sql中的In。 例:col1:v1,v2;col2:v3,v4 ...",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "description": "返回指定的记录数，必须是整数，默认:10,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "description": "返回记录行的偏移量，必须是整数，默认:0,",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "根据头信息获取token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully {object} resp.Result"
                     },
                     "400": {
                         "description": "bad request"
@@ -2735,15 +2804,15 @@
         }
     },
     "definitions": {
-        "11786.0xc0008a9a10.false": {
+        "11970.0xc04267d6e0.false": {
             "title": "false",
             "type": "object"
         },
-        "11914.0xc0008a9aa0.false": {
+        "12098.0xc04267d770.false": {
             "title": "false",
             "type": "object"
         },
-        "12082.0xc0008a9b90.false": {
+        "12266.0xc04267d860.false": {
             "title": "false",
             "type": "object"
         },
@@ -2940,7 +3009,8 @@
                     "type": "string"
                 },
                 "Rfdistance": {
-                    "type": "string"
+                    "type": "integer",
+                    "format": "int64"
                 }
             }
         },
@@ -3043,24 +3113,13 @@
                 "last_update_person": {
                     "type": "string"
                 },
-                "map_id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
                 "remark": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "integer",
-                    "format": "int64"
                 },
                 "tag_addr": {
                     "type": "string"
                 },
                 "tag_alias": {
-                    "type": "string"
-                },
-                "tag_number": {
                     "type": "string"
                 },
                 "tid": {
@@ -3071,17 +3130,9 @@
                     "type": "string",
                     "format": "datetime"
                 },
-                "x": {
-                    "type": "number",
-                    "format": "double"
-                },
-                "y": {
-                    "type": "number",
-                    "format": "double"
-                },
-                "z": {
-                    "type": "number",
-                    "format": "double"
+                "upload_at": {
+                    "type": "string",
+                    "format": "datetime"
                 }
             }
         },
@@ -3179,6 +3230,10 @@
                 "password": {
                     "type": "string"
                 },
+                "role_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
                 "secretkey": {
                     "type": "string"
                 },
@@ -3204,7 +3259,7 @@
                 "list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/12082.0xc0008a9b90.false"
+                        "$ref": "#/definitions/12266.0xc04267d860.false"
                     }
                 },
                 "meta": {
@@ -3225,7 +3280,7 @@
                     "type": "string"
                 },
                 "message": {
-                    "$ref": "#/definitions/11786.0xc0008a9a10.false"
+                    "$ref": "#/definitions/11970.0xc04267d6e0.false"
                 },
                 "status": {
                     "type": "boolean"
@@ -3237,7 +3292,7 @@
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/11914.0xc0008a9aa0.false"
+                    "$ref": "#/definitions/12098.0xc04267d770.false"
                 },
                 "meta": {
                     "$ref": "#/definitions/resp.Meta"

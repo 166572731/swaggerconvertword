@@ -178,6 +178,7 @@ public class WordServiceImpl implements WordService {
                 log.debug(JsonUtils.writeJsonStr(resultMap));
             } catch (Exception e) {
                 log.error(e.getMessage());
+                System.out.println("数据同步失败...");
                 //事务回滚
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 this.resultMap.put("info", "null");
@@ -185,7 +186,6 @@ public class WordServiceImpl implements WordService {
                 this.resultMap.put("tableMap", "null");
             }
             this.initData = false;
-            System.out.println("数据同步完成...");
         }
         return this.resultMap;
     }
