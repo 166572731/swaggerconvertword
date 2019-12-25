@@ -1,55 +1,32 @@
-<mapper namespace="">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmcc.rtls.mapper.MenuMapper">
     <resultMap id="BaseResultMap" type="com.cmcc.rtls.model.Menu">
-        <id column="id" property="id" jdbcType="INT"/>
-        <result column="title" property="title" jdbcType="VARCHAR"/>
-        <result column="pid" property="pid" jdbcType="INT"/>
-        <result column="url" property="url" javaType="VARCHAR"/>
-        <result column="method" property="method" jdbcType="VARCHAR"/>
-        <result column="icon" property="icon" jdbcType="VARCHAR"/>
-        <result column="type" property="type" jdbcType="INT"/>
-        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <id column="permission_menu_id" jdbcType="INTEGER" property="id"/>
+        <result column="permission_menu_title" jdbcType="VARCHAR" property="title"/>
+        <result column="permission_menu_pid" jdbcType="INTEGER" property="pid"/>
+        <result column="permission_menu_url" jdbcType="VARCHAR" property="url"/>
+        <result column="permission_menu_method" jdbcType="VARCHAR" property="method"/>
+        <result column="permission_menu_icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="permission_menu_type" jdbcType="INTEGER" property="type"/>
+        <result column="permission_menu_remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
-
     <sql id="Base_Column_List">
-        id, title, pid, url, method,icon,type,remark
+        permission_menu.id as permission_menu_id, permission_menu.title as permission_menu_title,
+    permission_menu.pid as permission_menu_pid, permission_menu.url as permission_menu_url, 
+    permission_menu.`method` as `permission_menu_method`, permission_menu.icon as permission_menu_icon, 
+    permission_menu.`type` as `permission_menu_type`, permission_menu.remark as permission_menu_remark
     </sql>
-
-    <select id="getAll" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM users
-    </select>
-
-    <select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM users
-        WHERE id = #{id}
-    </select>
-
-    <insert id="insert" parameterType="com.neo.entity.UserEntity">
-        INSERT INTO
-        users
-        (userName,passWord,user_sex)
-        VALUES
-        (#{userName}, #{passWord}, #{userSex})
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.cmcc.rtls.model.Menu"
+            useGeneratedKeys="true">
+        insert into permission_menu (title, pid, url,
+                                     `method`, icon, `type`,
+                                     remark)
+        values (#{title,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
+                #{method,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+                #{remark,jdbcType=VARCHAR})
     </insert>
-
-    <update id="update" parameterType="com.neo.entity.UserEntity">
-        UPDATE
-        users
-        SET
-        <if test="userName != null">userName = #{userName},</if>
-        <if test="passWord != null">passWord = #{passWord},</if>
-        nick_name = #{nickName}
-        WHERE
-        id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE FROM
-        users
-        WHERE
-        id =#{id}
-    </delete>
+  <delete id="synchronization">
+        delete from permission_menu
+  </delete>
 </mapper>

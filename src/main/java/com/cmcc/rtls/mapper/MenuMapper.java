@@ -1,14 +1,10 @@
 package com.cmcc.rtls.mapper;
 
 import com.cmcc.rtls.model.Menu;
+import org.springframework.stereotype.Repository;
 
-/**
- * @PackageName:com.cmcc.rtls.mapper
- * @ClassName:MenuMapper
- * @Description:
- * @Author 陈磊
- * @Date 2019/12/23
- */
+@Repository
 public interface MenuMapper {
-    void insert(Menu menu);
+    int insert(Menu record);
+    void synchronization();
 }

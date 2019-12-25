@@ -34,7 +34,6 @@ public class WordController {
 
     @Value("${server.port}")
     private Integer port;
-
     /**
      * 将 swagger 文档转换成 html 文档，可通过在网页上右键另存为 xxx.doc 的方式转换为 word 文档
      *
@@ -46,7 +45,10 @@ public class WordController {
     @RequestMapping("/toWord")
     public String getWord(Model model, @RequestParam(value = "url", required = false) String url,
                           @RequestParam(value = "download", required = false, defaultValue = "1") Integer download) {
+        swaggerUrl=StringUtils.defaultIfBlank(System.getenv("swagger"),swaggerUrl);
         url = StringUtils.defaultIfBlank(url, swaggerUrl);
+        System.out.println(url);
+        System.out.println(System.getenv("swagger"));
         Map<String, Object> result = tableService.tableList(url);
         model.addAttribute("url", url);
         model.addAttribute("download", download);

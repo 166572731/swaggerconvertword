@@ -1,24 +1,53 @@
 package com.cmcc.rtls.model;
 
+import java.io.Serializable;
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
- * @PackageName:com.cmcc.rtls.model
- * @ClassName:Menu
- * @Description:
- * @Author 陈磊
- * @Date 2019/12/23
+ * permission_menu
+ * @author 
  */
 @Data
 public class Menu implements Serializable {
-    private int id;
+    /**
+     * 菜单id编号
+     */
+    private Integer id;
+
+    /**
+     * 标题
+     */
     private String title;
-    private int pid;
+
+    /**
+     * 父级菜单id
+     */
+    private Integer pid;
+
+    /**
+     * 权限访问路径
+     */
     private String url;
+
+    /**
+     * 请求方式
+     */
     private String method;
+
+    /**
+     * 菜单图标
+     */
     private String icon;
-    private int type;
+
+    /**
+     * 菜单类型1-表示一级菜单2-表示子菜单3-表示非菜单
+     */
+    private Integer type;
+
+    /**
+     * 备注
+     */
     private String remark;
+
+    private static final long serialVersionUID = 1L;
 }
