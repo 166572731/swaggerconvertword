@@ -24,7 +24,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void synchronization() {
-        menuMapper.synchronization();
+    public void synchronization(Menu menu) {
+        menuMapper.synchronization(menu);
     }
 }

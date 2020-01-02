@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>toWord</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/search.css">
+</head>
+<body style="background-color:rgba(230,230,250,0.5)">
+<div style="width: 1000px;margin: 18px auto;" id="example-1">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md7">
+                <h1 class="layui-inline">{{title}}</h1>
+                <span class="layui-badge layui-bg-cyan">{{version}}</span>
+                <span class="layui-badge">Baseurl:{{basePath}}</span>
+                <div style="padding-left: 40px;" class="layui-inline">
+                    <a type="button"
+                       class="layui-btn layui-btn-xs layui-btn-warm" v-on:click="save">保存文件 <i
+                            class="layui-icon">&#xe601;</i>
+                    </a>
+                    <a type="button"
+                       class="layui-btn layui-btn-xs layui-btn-warm" v-on:click="synchronization">同步数据 <i
+                            class="layui-icon">&#xe669;</i>
+                    </a>
+                    <a type="button"
+                       class="layui-btn layui-btn-xs layui-btn-warm" v-on:click="changDbAdd">指定数据库 <i class="layui-icon">&#xe656;</i>
+                    </a>
+                </div>
+            </div>
+            <div class="layui-col-md5">
+                <div class="container">
+                    <form action="" class="parent layui-form">
+                        <div class="search">
+                            <input type="text" placeholder="swagger.json文件http路径" value="" id="url">
+                        </div>
+                        <button type="button" v-on:click="search" class="btn">GO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-orange">
+    <div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin: 0px;" v-for="(values,key) in items">
+            <legend style="border-radius: 8px;background: rgba(34,139,34,0.7);color: white">
+                <!--这个是类的说明-->
+                <h2 v-if="key!=''">{{key}}</h2>
+            </legend>
+            <div class="layui-field-box" v-for="(value,index) in values">
+                <table class="layui-table" lay-even style="box-shadow: 10px 10px 5px #888888;">
+                    <!--这个是每个请求的说明，方便生成文档后进行整理-->
+                    <tr class="layui-bg-cyan">
+                        <td colspan="5">
+                            <h4 class="layui-inline">{{index+1}}.{{value.description}}({{value.tag}})</h4>
+                        </td>
+                    </tr>
+                    <tr align="center">
+                        <td>基本信息</td>
+                        <td colspan="2">描述</td>
+                        <td colspan="2">说明</td>
+                    </tr>
+                    <tr align="center">
+                        <td>接口描述</td>
+                        <td colspan="2">{{value.description}}</td>
+                        <td colspan="2">{{value.tag}}</td>
+                    </tr>
+                    <tr align="center">
+                        <td>URL</td>
+                        <td colspan="2">{{value.url}}</td>
+                        <td colspan="2">请求路径地址</td>
+                    </tr>
+                    <tr align="center">
+                        <td>请求方式</td>
+                        <td colspan="2">{{value.requestType}}</td>
+                        <td colspan="2">{{value.requestType}}请求</td>
+                    </tr>
+                    <tr align="center">
+                        <td>请求类型</td>
+                        <td colspan="2">{{value.requestForm}}</td>
+                        <td colspan="2">/</td>
+                    </tr>
+                    <tr align="center">
+                        <td>返回类型</td>
+                        <td colspan="2">{{value.responseForm}}</td>
+                        <td colspan="2">/</td>
+                    </tr>
+
+                    <tr align="center">
+                        <td>状态码</td>
+                        <td colspan="2">描述</td>
+                        <td colspan="2">说明</td>
+                    </tr>
+
+                    <tr align="center" v-for="response in value.responseList">
+                        <td>{{response.name}}</td>
+                        <td colspan="2">{{response.description}}</td>
+                        <td colspan="2">{{response.remark}}</td>
+                    </tr>
+
+                    <tr align="center">
+                        <td>参数名</td>
+                        <td>数据类型</td>
+                        <td>参数类型</td>
+                        <td>是否必填</td>
+                        <td>说明</td>
+                    </tr>
+
+                    <tr align="center" v-for="request in value.requestList">
+                        <td>{{request.name}}</td>
+                        <td>{{request.type}}</td>
+                        <td>{{request.paramType}}</td>
+                        <td v-if="request.require">Y</td>
+                        <td v-if="!request.require">N</td>
+                        <td>{{request.remark}}</td>
+                    </tr>
+                    <tr align="center" class="specialHeight">
+                        <td>请求参数</td>
+                        <td colspan="4">
+                            <pre style="text-align: left" class="layui-code"
+                                 lay-skin="notepad">{{value.requestParam}}</pre>
+                        </td>
+                    </tr>
+                    <tr align="center" class="specialHeight">
+                        <td>返回值</td>
+                        <td colspan="4">
+                            <pre style="text-align: left" class="layui-code"
+                                 lay-skin="notepad">{{value.responseParam}}</pre>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+    <div>
+        <blockquote class="layui-elem-quote">小技巧：可以看到网页上生成的类似 word 文档的页面，右键另存为 xxx.doc 文件即可.</blockquote>
+    </div>
+</div>
+</body>
+<script src="js/vue.js" type="application/javascript"></script>
+<script src="layui/layui.js" type="application/javascript"></script>
+<script src="js/common.js" type="application/javascript"></script>
+</html>

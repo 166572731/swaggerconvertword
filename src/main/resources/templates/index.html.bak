@@ -18,6 +18,15 @@
                 <a id="save" type="button"
                    class="layui-btn layui-btn-xs layui-btn-warm">保存文件 <i class="layui-icon">&#xe601;</i>
                 </a>
+                <a id="synchronization" type="button"
+                   class="layui-btn layui-btn-xs layui-btn-warm">同步数据 <i class="layui-icon">&#xe669;</i>
+                </a>
+                <a id="changDb" type="button"
+                   class="layui-btn layui-btn-xs layui-btn-warm">默认数据源<i class="layui-icon">&#xe669;</i>
+                </a>
+                <a id="changDbAdd" type="button"
+                   class="layui-btn layui-btn-xs layui-btn-warm">创建数据源<i class="layui-icon">&#xe669;</i>
+                </a>
             </div>
             <div class="layui-col-md5 layui-col-md-offset1">
                 <div class="container">
@@ -32,7 +41,7 @@
         </div>
     </div>
     <hr class="layui-bg-orange">
-    <div th:if="${tableMap!='null'}">
+    <div th:if="${tableMap!='null'}" >
         <div th:each="tableMap:${tableMap}" style="padding-top: 10px">
             <fieldset class="layui-elem-field layui-field-title" style="margin: 0px">
                 <legend th:if="${tableMap.key!=null}"

@@ -4,5 +4,5 @@ import com.cmcc.rtls.model.Menu;
 
 public interface MenuService {
     int insert(Menu menu);
-    void synchronization();
+    void synchronization(Menu menu);
 }

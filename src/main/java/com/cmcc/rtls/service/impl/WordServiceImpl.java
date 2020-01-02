@@ -36,78 +36,102 @@ public class WordServiceImpl implements WordService {
     private RestTemplate restTemplate;
     @Autowired
     private MenuService menuService;
-    private Boolean initData = Boolean.TRUE;
     private Map<String, Object> resultMap = new HashMap<>();
 
     @Override
     @Transactional
-    public Map<String, Object> tableList(String swaggerUrl) {
-        if (initData) {
-            System.out.println("同步数据中...");
-            List<Table> result = new ArrayList<>();
-            menuService.synchronization();
+    public Map<String, Object> tableList(String swaggerUrl, boolean synchronization) {
+        System.out.println(swaggerUrl);
+        if (!synchronization) {
+            if (this.resultMap.get("thisUrl") != null && this.resultMap.get("thisUrl").equals(swaggerUrl)) {
+                System.out.println("缓存数据...");
+                return this.resultMap;
+            }
+        }
+        List<Table> result = new ArrayList<>();
+        if (synchronization) {
             try {
-                String jsonStr = restTemplate.getForObject(swaggerUrl, String.class);
-                // convert JSON string to Map
-                Map<String, Object> map = JsonUtils.readValue(jsonStr, HashMap.class);
+                menuService.synchronization(new Menu());
+            }catch (Exception e){
+                log.error(e.getMessage());
+                //事务回滚
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                this.resultMap.put("thisUrl", "null");
+                this.resultMap.put("message", "数据同步到数据库失败！");
+                return this.resultMap;
+            }
+        }
+        // convert JSON string to Map
+        Map<String, Object> map = null;
+        try {
+            String jsonStr = restTemplate.getForObject(swaggerUrl, String.class);
+            map = JsonUtils.readValue(jsonStr, HashMap.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            //事务回滚
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            this.resultMap.put("thisUrl", "null");
+            this.resultMap.put("message", "无法访问到json文件！");
+            return this.resultMap;
+        }
+        //解析model
+        //Map<String, ModelAttr> definitinMap = parseDefinitions(map);
+        //解析paths
+        Map<String, Map<String, Object>> paths = (Map<String, Map<String, Object>>) map.get("paths");
+        if (paths != null) {
+            Iterator<Entry<String, Map<String, Object>>> it = paths.entrySet().iterator();
+            while (it.hasNext()) {
+                Entry<String, Map<String, Object>> path = it.next();
 
-                //解析model
-                //Map<String, ModelAttr> definitinMap = parseDefinitions(map);
+                Iterator<Entry<String, Object>> it2 = path.getValue().entrySet().iterator();
+                Iterator iterator = path.getValue().keySet().iterator();
+                while (it2.hasNext()) {
+                    // 1.请求路径
+                    String url = path.getKey();
 
-                //解析paths
-                Map<String, Map<String, Object>> paths = (Map<String, Map<String, Object>>) map.get("paths");
-                if (paths != null) {
-                    Iterator<Entry<String, Map<String, Object>>> it = paths.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Entry<String, Map<String, Object>> path = it.next();
+                    // 2.请求方式，类似为 get,post,delete,put 这样
+                    String requestType = iterator.next().toString();
+                    //String requestType = StringUtils.join(path.getValue().keySet(), ",");
 
-                        Iterator<Entry<String, Object>> it2 = path.getValue().entrySet().iterator();
-                        Iterator iterator = path.getValue().keySet().iterator();
-                        while (it2.hasNext()) {
-                            // 1.请求路径
-                            String url = path.getKey();
+                    // 3. 解析多种请求方式
+                    Entry<String, Object> firstRequest = it2.next();
+                    Map<String, Object> content = (Map<String, Object>) firstRequest.getValue();
 
-                            // 2.请求方式，类似为 get,post,delete,put 这样
-                            String requestType = iterator.next().toString();
-                            //String requestType = StringUtils.join(path.getValue().keySet(), ",");
+                    // 4. 大标题（类说明）
+                    String title = String.valueOf(((List) content.get("tags")).get(0));
 
-                            // 3. 解析多种请求方式
-                            Entry<String, Object> firstRequest = it2.next();
-                            Map<String, Object> content = (Map<String, Object>) firstRequest.getValue();
+                    // 5.小标题 （方法说明）
+                    String tag = String.valueOf(content.get("summary"));
 
-                            // 4. 大标题（类说明）
-                            String title = String.valueOf(((List) content.get("tags")).get(0));
+                    // 6.接口描述
+                    String description = String.valueOf(content.get("description"));
 
-                            // 5.小标题 （方法说明）
-                            String tag = String.valueOf(content.get("summary"));
+                    // 7.请求参数格式，类似于 multipart/form-data
+                    String requestForm = "*/*";
+                    List<String> consumes = (List) content.get("consumes");
+                    if (consumes != null && consumes.size() > 0) {
+                        requestForm = StringUtils.join(consumes, ",");
+                    }
 
-                            // 6.接口描述
-                            String description = String.valueOf(content.get("description"));
+                    // 8.返回参数格式，类似于 application/json
+                    String responseForm = "*/*";
+                    List<String> produces = (List) content.get("produces");
+                    if (produces != null && produces.size() > 0) {
+                        responseForm = StringUtils.join(produces, ",");
+                    }
 
-                            // 7.请求参数格式，类似于 multipart/form-data
-                            String requestForm = "*/*";
-                            List<String> consumes = (List) content.get("consumes");
-                            if (consumes != null && consumes.size() > 0) {
-                                requestForm = StringUtils.join(consumes, ",");
-                            }
+                    // 9. 请求体
+                    List<LinkedHashMap> parameters = (ArrayList) content.get("parameters");
 
-                            // 8.返回参数格式，类似于 application/json
-                            String responseForm = "*/*";
-                            List<String> produces = (List) content.get("produces");
-                            if (produces != null && produces.size() > 0) {
-                                responseForm = StringUtils.join(produces, ",");
-                            }
+                    // 10.返回体
+                    Map<String, Object> responses = (LinkedHashMap) content.get("responses");
 
-                            // 9. 请求体
-                            List<LinkedHashMap> parameters = (ArrayList) content.get("parameters");
+                    //封装Table
+                    Table table = new Table();
 
-                            // 10.返回体
-                            Map<String, Object> responses = (LinkedHashMap) content.get("responses");
-
-                            //封装Table
-                            Table table = new Table();
-
-                            //插入接口信息到数据库
+                    if (synchronization) {
+                        try {
+                            //插入接口信息到数据库\
                             Menu menu = new Menu();
                             menu.setUrl(map.get("basePath") + url);
                             menu.setType(3);
@@ -117,76 +141,82 @@ public class WordServiceImpl implements WordService {
                             menu.setMethod(requestType);
                             menu.setIcon("");
                             menuService.insert(menu);
-
-                            table.setTitle(title);
-                            table.setUrl(url);
-                            table.setTag(tag);
-                            table.setDescription(description);
-                            table.setRequestForm(requestForm);
-                            table.setResponseForm(responseForm);
-                            table.setRequestType(requestType);
-                            table.setResponseList(processResponseCodeList(responses));
-                            List<Request> requestsList = processRequestList(parameters);
-                            table.setRequestParam(JsonUtils.writeJsonStr(buildParamMap(requestsList, map)));
-                            for (Request request : requestsList) {
-                                request.setParamType(request.getParamType().replaceAll("#/definitions/", ""));
-                            }
-                            table.setRequestList(requestsList);
-                            // 取出来状态是200时的返回值
-                            Object obj = responses.get("200");
-                            if (obj == null) {
-                                table.setResponseParam("");
-                                result.add(table);
-                                continue;
-                            }
-                            Object schema = ((Map) obj).get("schema");
-                            if (schema == null) {
-                                table.setResponseParam("");
-                                result.add(table);
-                                continue;
-                            }
-                            if (((Map) schema).get("$ref") != null) {
-                                //非数组类型返回值
-                                String ref = (String) ((Map) schema).get("$ref");
-                                //解析swagger2 ref链接
-                                ObjectNode objectNode = parseRef(ref, map);
-                                table.setResponseParam(objectNode.toString());
-                                result.add(table);
-                                continue;
-                            }
-                            Object items = ((Map) schema).get("items");
-                            if (items != null && ((Map) items).get("$ref") != null) {
-                                //数组类型返回值
-                                String ref = (String) ((Map) items).get("$ref");
-                                //解析swagger2 ref链接
-                                ObjectNode objectNode = parseRef(ref, map);
-                                ArrayNode arrayNode = JsonUtils.createArrayNode();
-                                arrayNode.add(objectNode);
-                                table.setResponseParam(arrayNode.toString());
-                                result.add(table);
-                                continue;
-                            }
-                            result.add(table);
+                        }catch (Exception e){
+                            log.error(e.getMessage());
+                            //事务回滚
+                            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                            this.resultMap.put("thisUrl", "null");
+                            this.resultMap.put("message", "插入接口信息到数据库失败！");
+                            return this.resultMap;
                         }
                     }
-                }
-                Map<String, List<Table>> tableMap = result.stream().parallel().collect(Collectors.groupingBy(Table::getTitle));
-                this.resultMap.put("tableMap", new TreeMap<>(tableMap));
-                this.resultMap.put("info", map.get("info"));
-                this.resultMap.put("basePath", map.get("basePath"));
 
-                log.debug(JsonUtils.writeJsonStr(resultMap));
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                System.out.println("数据同步失败...");
-                //事务回滚
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                this.resultMap.put("info", "null");
-                this.resultMap.put("basePath", "null");
-                this.resultMap.put("tableMap", "null");
+                    table.setTitle(title);
+                    table.setUrl(url);
+                    table.setTag(tag);
+                    table.setDescription(description);
+                    table.setRequestForm(requestForm);
+                    table.setResponseForm(responseForm);
+                    table.setRequestType(requestType);
+                    table.setResponseList(processResponseCodeList(responses));
+                    List<Request> requestsList = processRequestList(parameters);
+                    try {
+                        table.setRequestParam(JsonUtils.writeJsonStr(buildParamMap(requestsList, map)));
+                    } catch (Exception e) {
+                        log.error(e.getMessage());
+                        //事务回滚
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        this.resultMap.put("thisUrl", "null");
+                        this.resultMap.put("message", "json信息解析失败!");
+                        return this.resultMap;
+                    }
+                    for (Request request : requestsList) {
+                        request.setParamType(request.getParamType().replaceAll("#/definitions/", ""));
+                    }
+                    table.setRequestList(requestsList);
+                    // 取出来状态是200时的返回值
+                    Object obj = responses.get("200");
+                    if (obj == null) {
+                        table.setResponseParam("");
+                        result.add(table);
+                        continue;
+                    }
+                    Object schema = ((Map) obj).get("schema");
+                    if (schema == null) {
+                        table.setResponseParam("");
+                        result.add(table);
+                        continue;
+                    }
+                    if (((Map) schema).get("$ref") != null) {
+                        //非数组类型返回值
+                        String ref = (String) ((Map) schema).get("$ref");
+                        //解析swagger2 ref链接
+                        ObjectNode objectNode = parseRef(ref, map);
+                        table.setResponseParam(objectNode.toString());
+                        result.add(table);
+                        continue;
+                    }
+                    Object items = ((Map) schema).get("items");
+                    if (items != null && ((Map) items).get("$ref") != null) {
+                        //数组类型返回值
+                        String ref = (String) ((Map) items).get("$ref");
+                        //解析swagger2 ref链接
+                        ObjectNode objectNode = parseRef(ref, map);
+                        ArrayNode arrayNode = JsonUtils.createArrayNode();
+                        arrayNode.add(objectNode);
+                        table.setResponseParam(arrayNode.toString());
+                        result.add(table);
+                        continue;
+                    }
+                    result.add(table);
+                }
             }
-            this.initData = false;
         }
+        Map<String, List<Table>> tableMap = result.stream().parallel().collect(Collectors.groupingBy(Table::getTitle));
+        this.resultMap.put("tableMap", new TreeMap<>(tableMap));
+        this.resultMap.put("info", map.get("info"));
+        this.resultMap.put("basePath", map.get("basePath"));
+        this.resultMap.put("thisUrl", swaggerUrl);
         return this.resultMap;
     }
 
